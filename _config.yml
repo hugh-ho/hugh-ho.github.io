@@ -19,3 +19,9 @@ collections:
   category:
     output: true
     permalink: /categories/:name/
+
+exclude:
+  - AGENTS.md
+  - README.md
+  - Gemfile
+  - Gemfile.lock
