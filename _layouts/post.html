@@ -29,6 +29,16 @@ layout: default
 <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
+    // 转换 mermaid 代码块为 div
+    document.querySelectorAll('pre code.language-mermaid').forEach(function(codeBlock) {
+      var pre = codeBlock.parentElement;
+      var mermaidDiv = document.createElement('div');
+      mermaidDiv.className = 'mermaid';
+      mermaidDiv.textContent = codeBlock.textContent;
+      pre.parentNode.replaceChild(mermaidDiv, pre);
+    });
+
+    // 初始化 mermaid
     mermaid.initialize({
       startOnLoad: true,
       theme: 'default',
