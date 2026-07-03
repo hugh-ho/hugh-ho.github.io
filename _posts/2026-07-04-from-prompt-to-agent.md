@@ -243,37 +243,21 @@ Temperature 通常与以下参数配合使用：
 
 #### ReAct 的三个核心组件
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                        ReAct 循环                            │
-│                                                             │
-│  ┌──────────┐      ┌──────────┐      ┌──────────┐          │
-│  │ Thought  │─────→│  Action  │─────→│Observation│          │
-│  │  思考    │      │  行动    │      │  观察    │          │
-│  │          │      │          │      │          │          │
-│  │ "我需要  │      │ 调用工具 │      │ 获取结果 │          │
-│  │  搜索"   │      │ search() │      │ "结果是xx"│          │
-│  └──────────┘      └──────────┘      └──────────┘          │
-│        ↑                                    │               │
-│        └────────────────────────────────────┘               │
-│                      (循环直到完成)                          │
-└─────────────────────────────────────────────────────────────┘
+```mermaid
+graph LR
+    A[🤔 Thought<br/>思考] --> B[🔧 Action<br/>行动]
+    B --> C[👁 Observation<br/>观察]
+    C --> A
+    
+    style A fill:#e3f2fd,stroke:#1976d2
+    style B fill:#fff3e0,stroke:#f57c00
+    style C fill:#e8f5e9,stroke:#388e3c
 ```
 
-**1. Thought（思考）**
-- 分析当前状态和目标
-- 决定下一步需要什么信息
-- 评估已有信息是否足够
-
-**2. Action（行动）**
-- 根据思考结果调用工具
-- 格式通常是标准化的（如 JSON）
-- 行动类型：搜索、计算、API 调用、数据库查询等
-
-**3. Observation（观察）**
-- 接收工具返回的结果
-- 将结果纳入上下文
-- 为下一轮思考提供输入
+**组件说明**：
+- **Thought（思考）**：分析当前状态和目标，决定下一步需要什么信息
+- **Action（行动）**：根据思考结果调用工具，格式通常是标准化的（如 JSON）
+- **Observation（观察）**：接收工具返回的结果，将结果纳入上下文，为下一轮思考提供输入
 
 #### 完整工作流程示例
 
@@ -451,15 +435,20 @@ ToT 的树结构有个限制：不同分支无法合并。GoT 引入**图结构*
 
 对于复杂的多步骤任务，把**规划**和**执行**解耦：
 
-```
-┌─────────────┐     ┌─────────────┐
-│   Planner   │────→│  Executor   │
-│  制定计划    │     │  执行每一步  │
-│             │     │             │
-│ 1. 查天气    │     │ → 调用API   │
-│ 2. 查交通    │     │ → 查路线    │
-│ 3. 给建议    │     │ → 生成回复  │
-└─────────────┘     └─────────────┘
+```mermaid
+graph LR
+    A[🎯 Planner<br/>规划器] --> B[📋 制定计划]
+    B --> C[🚀 Executor<br/>执行器]
+    C --> D[✅ 执行步骤1]
+    C --> E[✅ 执行步骤2]
+    C --> F[✅ 执行步骤3]
+    
+    style A fill:#e3f2fd,stroke:#1976d2
+    style B fill:#fff3e0,stroke:#f57c00
+    style C fill:#e8f5e9,stroke:#388e3c
+    style D fill:#fce4ec,stroke:#c2185b
+    style E fill:#fce4ec,stroke:#c2185b
+    style F fill:#fce4ec,stroke:#c2185b
 ```
 
 **优势**：规划阶段可以全局优化，执行阶段可以局部调整。
@@ -785,19 +774,27 @@ Skill 内部使用 MCP 协议连接：
 
 实际 Agent 往往是多种方法的组合：
 
+```mermaid
+graph TD
+    A[用户输入] --> B{路由判断}
+    B -->|简单任务| C[CoT<br/>直接解决]
+    B -->|复杂任务| D[Plan-and-Solve]
+    D --> E[ToT<br/>探索方案]
+    D --> F[Reflexion<br/>纠错]
+    C --> G[工具调用<br/>ReAct模式]
+    E --> G
+    F --> G
+    G --> H[结果输出]
+    
+    style A fill:#e3f2fd,stroke:#1976d2
+    style B fill:#fff3e0,stroke:#f57c00
+    style C fill:#e8f5e9,stroke:#388e3c
+    style D fill:#fce4ec,stroke:#c2185b
+    style E fill:#f3e5f5,stroke:#7b1fa2
+    style F fill:#f3e5f5,stroke:#7b1fa2
+    style G fill:#e8eaf6,stroke:#303f9f
+    style H fill:#fff8e1,stroke:#ffa000
 ```
-用户输入
-   ↓
-路由判断（简单/复杂）
-   ↓
-┌──────────────┐  ┌──────────────────┐
-│ 简单任务      │  │ 复杂任务          │
-│ CoT 直接解决  │  │ Plan-and-Solve   │
-│              │  │ + ToT 探索方案     │
-│              │  │ + Reflexion 纠错   │
-└──────────────┘  └──────────────────┘
-   ↓
-工具调用（ReAct 模式）
    ↓
 结果输出
 ```
