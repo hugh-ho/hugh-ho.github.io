@@ -1,4 +1,4 @@
-# 我的博客
+# 我的精神乐园
 
 使用 Jekyll + GitHub Pages 构建。
 
