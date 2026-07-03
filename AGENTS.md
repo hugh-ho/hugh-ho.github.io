@@ -1,4 +1,21 @@
-# AI 助手指令
+# AI 助手指令 (AI Assistant Instructions)
+
+> **适用**: Claude, Codex, GitHub Copilot, Cursor 等 AI 助手  
+> **项目**: Jekyll Blog - 时间的朋友  
+> **URL**: https://hugh-ho.github.io
+
+---
+
+## 项目概述
+
+基于 Jekyll + GitHub Pages 的个人博客，用于记录学习笔记。
+
+- **标题**: 时间的朋友
+- **副标题**: 时间看得见，知识会沉淀
+- **主题**: minima
+- **部署**: GitHub Pages 自动构建
+
+---
 
 ## 关键规则
 
