@@ -1,10 +1,3 @@
-# AI 助手指令 (AI Assistant Instructions)
-
-> **适用**: Claude, Codex, GitHub Copilot, Cursor 等 AI 助手  
-> **项目**: Jekyll Blog - 时间的朋友  
-> **URL**: https://hugh-ho.github.io
-
----
 
 ## 项目概述
 
