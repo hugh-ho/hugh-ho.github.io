@@ -1,14 +1,14 @@
 # AI 助手指令 (AI Assistant Instructions)
 
-> **FOR**: Claude, Codex, GitHub Copilot, Cursor 等 AI 助手
-> **PROJECT**: Jekyll Blog - 时间的朋友
+> **适用**: Claude, Codex, GitHub Copilot, Cursor 等 AI 助手  
+> **项目**: Jekyll Blog - 时间的朋友  
 > **URL**: https://hugh-ho.github.io
 
 ---
 
-## 项目概述 (Project Overview)
+## 项目概述
 
-这是一个基于 Jekyll + GitHub Pages 的个人博客，用于记录学习笔记。
+基于 Jekyll + GitHub Pages 的个人博客，用于记录学习笔记。
 
 - **标题**: 时间的朋友
 - **副标题**: 时间看得见，知识会沉淀
@@ -17,15 +17,15 @@
 
 ---
 
-## 关键规则 (CRITICAL RULES)
+## 关键规则
 
-### ✅ ALLOWED - 允许的操作
+### ✅ 允许的操作
 
 1. **创建新文章** (`_posts/YYYY-MM-DD-title.md`)
 2. **修改现有文章** (`_posts/` 目录下的文件)
 3. **新增分类定义** (`_category/{分类名}.md`)
 
-### ❌ FORBIDDEN - 绝对禁止
+### ❌ 绝对禁止
 
 **以下文件决定网站布局，严禁修改：**
 
@@ -40,15 +40,13 @@
 
 ---
 
-## 自动处理逻辑 (Auto-Processing Logic)
+## 自动处理逻辑
 
-### 当用户要求新增/修改文章时：
+当用户要求新增/修改文章时，检查 `categories`：
 
 ```
-IF 文章内容包含新的 categories:
-    FOR EACH 新分类:
-        IF 分类文件不存在于 _category/ 目录:
-            创建 _category/{分类名}.md
+如果包含新的分类:
+    为每个新分类创建 _category/{分类名}.md
 ```
 
 ### 分类定义文件模板：
@@ -63,11 +61,11 @@ permalink: /categories/分类名/
 
 ---
 
-## 文章格式 (Post Format)
+## 文章格式
 
-文件名：`YYYY-MM-DD-title.md`
+**文件名**: `YYYY-MM-DD-title.md`
 
-内容模板：
+**内容模板**:
 ```yaml
 ---
 layout: post
@@ -82,13 +80,12 @@ tags: [标签1, 标签2]  # 可选
 
 ---
 
-## 目录结构 (Directory Structure)
+## 目录结构
 
 ```
 .
 ├── _config.yml          # ❌ 禁止修改
 ├── _category/           # ✅ 可新增分类定义
-│   └── 随笔.md
 ├── _layouts/            # ❌ 禁止修改
 ├── _posts/              # ✅ 可新增/修改文章
 ├── categories.md        # ❌ 禁止修改
@@ -99,16 +96,16 @@ tags: [标签1, 标签2]  # 可选
 
 ---
 
-## 工作流程 (Workflow)
+## 工作流程
 
-### 新增文章流程：
+### 新增文章
 
 1. 在 `_posts/` 创建文章文件
 2. 提取文章中的 `categories`
 3. 对每个新分类，在 `_category/` 创建对应文件
 4. 执行 `git add . && git commit -m "xxx" && git push origin main`
 
-### 修改文章流程：
+### 修改文章
 
 1. 编辑 `_posts/` 下的文章
 2. 如果修改了 `categories`（新增分类），执行分类创建逻辑
@@ -116,27 +113,27 @@ tags: [标签1, 标签2]  # 可选
 
 ---
 
-## 示例 (Examples)
+## 示例
 
 ### 示例 1：新增文章（现有分类）
-- 输入：用户要求添加随笔文章
-- 操作：仅创建 `_posts/2026-07-04-xxx.md`，无需其他操作
+- 用户要求添加随笔文章
+- **操作**: 仅创建 `_posts/2026-07-04-xxx.md`
 
 ### 示例 2：新增文章（新分类）
-- 输入：用户要求添加 "技术" 分类的文章
-- 操作：
+- 用户要求添加 "技术" 分类的文章
+- **操作**:
   1. 创建 `_posts/2026-07-04-xxx.md`
   2. 创建 `_category/技术.md`
 
 ### 示例 3：修改文章
-- 输入：用户要求修改某篇文章，并改为 "学习笔记" 分类
-- 操作：
+- 用户要求修改某篇文章，并改为 "学习笔记" 分类
+- **操作**:
   1. 修改文章
   2. 创建 `_category/学习笔记.md`（如果不存在）
 
 ---
 
-## 配置参考 (Config Reference)
+## 配置参考
 
 ```yaml
 email: maidongcao.up@gmail.com
@@ -147,7 +144,7 @@ theme: minima
 
 ---
 
-## 提醒 (Reminder)
+## 重要提醒
 
 - 保持中文分类名原样，不要转拼音
 - 分类文件名与分类名完全一致
