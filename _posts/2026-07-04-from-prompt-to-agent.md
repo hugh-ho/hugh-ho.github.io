@@ -621,8 +621,9 @@ graph LR
     L4["📍 Level 4: 记忆 Agent\n+ 短期记忆\n+ RAG"]
     L5["📍 Level 5: 规划 Agent\n+ Plan-and-Solve\n+ ToT/GoT"]
     L6["📍 Level 6: 自适应 Agent\n+ Reflexion\n+ Multi-Agent"]
+    L7["📍 Level 7: 标准化生态\n+ MCP\n+ Skill"]
 
-    L1 --> L2 --> L3 --> L4 --> L5 --> L6
+    L1 --> L2 --> L3 --> L4 --> L5 --> L6 --> L7
 
     style L1 fill:#e3f2fd,stroke:#1976d2
     style L2 fill:#e8f5e9,stroke:#388e3c
@@ -630,6 +631,7 @@ graph LR
     style L4 fill:#fce4ec,stroke:#c2185b
     style L5 fill:#f3e5f5,stroke:#7b1fa2
     style L6 fill:#e8eaf6,stroke:#303f9f
+    style L7 fill:#fff8e1,stroke:#ffa000
 ```
 
 ---
@@ -677,7 +679,122 @@ tools = [
 - **文件操作**：读写文档、代码文件
 - **浏览器**：网页浏览、表单填写
 
-### 5.3 规划能力集成
+### 5.3 工具连接的标准化：MCP 与 Skill
+
+随着 Agent 工具数量的增加，如何**标准化工具接入**和**复用常见功能**成为新的问题。MCP 和 Skill 是两种解决方案。
+
+#### MCP（Model Context Protocol）
+
+**MCP** 是 Anthropic 于 2024 年提出的开放协议，旨在统一 LLM 与外部数据源的连接方式。
+
+**核心思想**：
+```
+传统方式：每个工具都要写不同的适配代码
+MCP 方式：统一协议，一次接入，到处使用
+```
+
+**MCP 架构**：
+```mermaid
+flowchart LR
+    subgraph Client["AI 客户端"]
+        LLM["LLM"]
+        MCPClient["MCP 客户端"]
+    end
+    
+    subgraph Servers["MCP 服务器"]
+        Server1["文件系统服务器"]
+        Server2["数据库服务器"]
+        Server3["GitHub 服务器"]
+    end
+    
+    LLM <-->|"Function Calling"| MCPClient
+    MCPClient <-->|"标准协议"| Server1
+    MCPClient <-->|"标准协议"| Server2
+    MCPClient <-->|"标准协议"| Server3
+```
+
+**MCP 的优势**：
+- **标准化**：统一工具描述、调用方式、错误处理
+- **可发现性**：动态获取可用工具列表和能力描述
+- **安全性**：明确权限边界，支持用户确认
+- **生态复用**：社区共享的 MCP 服务器即插即用
+
+**对比传统 Function Calling**：
+
+| 特性 | 传统 Function Calling | MCP |
+|------|---------------------|-----|
+| 工具描述 | 硬编码在 Prompt | 动态从服务器获取 |
+| 接入方式 | 每个工具单独适配 | 统一协议接入 |
+| 社区生态 | 难以共享 | 可共享、可复用 |
+| 安全性 | 依赖实现 | 协议级别支持 |
+
+#### Skill（技能封装）
+
+**Skill** 是将常用功能封装成可复用模块的概念，常见于 Claude Code 等工具中。
+
+**什么是 Skill？**
+```
+Skill = 特定领域的工具集合 + 领域知识 + 最佳实践
+```
+
+**Skill 示例**：
+- **代码审查 Skill**：包含代码分析工具 + 审查规范 + 自动化检查
+- **数据分析 Skill**：包含 SQL 查询 + 可视化工具 + 统计方法
+- **文档生成 Skill**：包含模板引擎 + 格式转换 + 多语言支持
+
+**Skill 与单个工具的区别**：
+
+```mermaid
+flowchart TB
+    subgraph SingleTool["单个工具"]
+        T1["搜索工具"]
+        T2["API 调用"]
+        T3["代码执行"]
+    end
+    
+    subgraph Skill["Skill（技能封装）"]
+        S1["代码审查 Skill"]
+        S2["数据分析 Skill"]
+        S3["文档生成 Skill"]
+    end
+    
+    S1 --> T1
+    S1 --> T3
+    S2 --> T1
+    S2 --> T2
+    S2 --> T3
+    S3 --> T1
+    S3 --> T2
+```
+
+**Skill 的价值**：
+1. **开箱即用**：封装了完整的工作流，不只是单个工具
+2. **最佳实践内置**：包含了该领域的专业知识和经验
+3. **可组合**：多个 Skill 可以叠加使用
+4. **可共享**：团队内或社区中复用
+
+#### MCP vs Skill：互补关系
+
+| 维度 | MCP | Skill |
+|------|-----|-------|
+| **定位** | 协议标准 | 功能封装 |
+| **解决的问题** | 工具如何连接 | 功能如何组织 |
+| **层级** | 底层通信协议 | 上层应用抽象 |
+| **关系** | Skill 可以使用 MCP 协议接入工具 | MCP 可以作为 Skill 的基础设施 |
+
+**实际应用**：
+```
+用户调用"代码审查 Skill"
+        ↓
+Skill 内部使用 MCP 协议连接：
+  - Git MCP 服务器（获取代码）
+  - Linter MCP 服务器（静态检查）
+  - LLM（分析逻辑问题）
+        ↓
+整合结果，输出审查报告
+```
+
+### 5.4 规划能力集成
 
 实际 Agent 往往是多种方法的组合：
 
@@ -710,6 +827,7 @@ tools = [
 | **Level 4** | 多步推理规划 | ReAct, ToT, Plan-and-Solve |
 | **Level 5** | 自我改进 | Reflexion |
 | **Level 6** | 多 Agent 协作 | Multi-Agent, AutoGen |
+| **Level 7** | 标准化生态 | MCP, Skill |
 
 Agent 的发展正在从**单轮响应**走向**自主决策**，从**静态知识**走向**动态交互**。掌握这些基础方法，你就能构建出真正有用的 AI 应用。
 
